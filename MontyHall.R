@@ -68,3 +68,25 @@ sample(eligibleRevealDoors, 1)
 
 #### TO DO #### 
 ## find where I read this about the sample function. 
+
+
+#### quick fix ####
+
+nSims <- 10^4
+initialPickWinVec <- logical(nSims)
+switchDoorWinVec <- logical(nSims)
+doorNames <- c("one", "two", "three")
+for(iSim in 1:nSims){
+  carDoor <- sample(doorNames, 1)
+  goatDoors <- setdiff(doorNames, carDoor)
+  initialDoorPick <- sample(doorNames, 1)
+  eligibleRevealDoors <- setdiff(goatDoors, initialDoorPick)
+  doorRevealed <- sample(eligibleRevealDoors, 1)
+  switchDoor <- setdiff(doorNames, c(initialDoorPick, doorRevealed))
+  
+  initialPickWinVec[iSim] <- carDoor == initialDoorPick
+  switchDoorWinVec[iSim] <- carDoor == switchDoor
+}
+
+mean(initialPickWinVec)
+mean(switchDoorWinVec)
