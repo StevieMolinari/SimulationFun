@@ -47,6 +47,17 @@ coeffDf %>%
   summarise(
     mean(Factorable)
   )
-  
 
-  
+# # alternatively
+# coeffDf <- 
+#   tibble(
+#     ACoeff = rep(rep(0:9, each = nCoeffs), each = nCoeffs),
+#     BCoeff = rep(rep(0:9, each = nCoeffs), times = nCoeffs),
+#     CCoeff = rep(rep(0:9, times = nCoeffs), times = nCoeffs)
+#   ) %>% 
+#   mutate(
+#     Discriminant = BCoeff^2 - 4*ACoeff*CCoeff,
+#     Factorable = sqrt(Discriminant) == round(sqrt(Discriminant))
+#   )
+# 
+# coeffDf$Factorable %>% mean(na.rm = TRUE)
