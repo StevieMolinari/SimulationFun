@@ -1,2 +1,2 @@
 # SimulationFun
-a repository to include fun simulations of probability problems
+A repository to include fun simulations of probability problems
