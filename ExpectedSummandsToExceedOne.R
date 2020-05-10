@@ -21,7 +21,7 @@ for(iDraws in 1:nDraws){
 }
 
 ### better plots??
-iDraws = 3
+# iDraws = 3
 randomSamples = numeric(nSims)
 for(iDraws in 1:nDraws){
   randomSamples = randomSamples + runif(nSims)
@@ -59,10 +59,26 @@ first.sum.geq.to.one <- function(x){
 
 ### let's go
 nDraws <- 10
-nSims <- 10^4
+nSims <- 10^5
 randomSampleMatrix <- matrix(runif(nSims*nDraws), ncol = nDraws)
 summandsToExceedOne <- apply(randomSampleMatrix, 1, first.sum.geq.to.one)
 hist(summandsToExceedOne) 
+## for the life of me, i don't know why that histogram is squishing together the first two like that
+
+#### a homemade histogram  of the pdf ####
+heightsVec <- table(summandsToExceedOne)/nSims
+nRects <- length(heightsVec)
+class(heightsVec)
+class(heightsVec[1])
+
+plot(c(0, 0), pch = "", 
+     xlim = c(1.5, nRects+ 1/2), ylim = c(0, max(heightsVec)),
+     xlab = "P(X = x)", ylab = "x", main = "PDF of X")
+rect(xleft = 2:nRects - 1/2, ybottom = 0, xright = 2:nRects + 1/2, ytop = heightsVec,
+     col = "dodgerblue")
+
+## i like mine better
+
 
 ### guesses at their expected value (*SHHHH*)
 # mean(summandsToExceedOne)
@@ -70,10 +86,12 @@ hist(summandsToExceedOne)
 
 # investigating the proportions
 table(summandsToExceedOne)/nSims
+
 ### *SSSHHHHH* ###
 # 1/(factorial(0:7)*(2:9))
 
 
+#### numerically checking the cdf ####
 ### what is the probability that n iid u(0,1) sum to less than 1
 sums.geq.to.one <- function(x){
   x %>% cumsum() %>% geq.to.one()
@@ -88,16 +106,19 @@ probNSummandsLeqToOne <- 1 - probNSummandsGeqToOne
 probNSummandsLeqToOne
 1/factorial(1:9)
 
-### the probability that n iid u(0,1) sum to less than 1 is 1/n!
-## proof by induction depends on the following fact
+### Theorem: P(X_n) = 1/n! ####
+## proof by induction depends on the following: for any a<1, p(X_n < a) = a^n/n!
 
-
-## the probability that n iid u(0,1) summ to less than a <= 1 is a^n/n!
+## can we check this lemma?
+### duhh. the probability that n iid u(0,1) sums to less than a <= 1 is a^n/n!
 geq.to.a <- function(x, a){x>=a}
-eh <- 1/4
-probNSummandsGeqToA <- rowCumSummedRandSampMat %>% geq.to.a(a = eh) %>% colMeans()
+anA <- 1/4
+probNSummandsGeqToA <- rowCumSummedRandSampMat %>% geq.to.a(a = anA) %>% colMeans()
 probNSummandsLeqToA <- 1 - probNSummandsGeqToA
 probNSummandsLeqToA
-(1/factorial(1:9)) * eh^(1:9)
+(1/factorial(1:9)) * anA^(1:9)
+
+
+### does this show, that this only holds for a<1?
 
 
